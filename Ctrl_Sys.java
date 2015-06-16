@@ -9,36 +9,46 @@ import ru.nsu.alife.fs.PredicateSet;
 
 class Ctrl_Sys extends IAcceptor{
 
-  SurroundingScanner sensor;
-  Mover mvr;
   double proactivity = 0.5;
+  // SurroundingScanner sensor;
+  Mover mvr;
+  static boolean animateInMotion = false;
+  PredicateSet goal;
+  IFS primaryFS;
 
   IAction moveAhead;
   IAction moveBack;
-  IAction turnRightSmall;
-  IAction turnLeftSmall;
-  IAction turnRightBig;
-  IAction turnLeftBig;
+  IAction turnRight;
+  IAction turnLeft;
+  IAction stop;
+  // IAction turnRightBig;
+  // IAction turnLeftBig;
 
   Ctrl_Sys(){
-    sensor = new SurroundingScanner();
+    // sensor = new SurroundingScanner();
 
     Mover mvr = new Mover();
     moveAhead = mvr.moveBack;
     moveBack = mvr.moveAhead;
-    turnRightSmall = mvr.turnRightSmall;
-    turnLeftSmall = mvr.turnLeftSmall;
-    turnRightBig = mvr.turnRightBig;
-    turnLeftBig = mvr.turnLeftBig;
+    turnRight = mvr.turnRight;
+    turnLeft = mvr.turnLeft;
+    stop = mvr.stop;
+    // turnRightBig = mvr.turnRightBig;
+    // turnLeftBig = mvr.turnLeftBig;
+
+    goal = new PredicateSet();
+    goal.set(Predicate.FoodEaten, true);
+    primaryFS = (IFS) new FS(goal, 10);
   }
 
   @Override
   public PredicateSet getCurrentSituation() {
-    Integer[] surrounding;
     PredicateSet situation = new PredicateSet();
-    surrounding = sensor.sensorOut();
+    Integer[] surrounding = SurroundingScanner.ray_s_cond;
 
-    situation.set(Predicate.FoodEaten, FoodCtrl.foodEaten == true);
+    situation.set(Predicate.FoodEaten, EnvirCtrl.foodEaten);
+
+    situation.set(Predicate.IsMoving, Ctrl_Sys.animateInMotion);
 
     situation.set(Predicate.FoodAheadFar, surrounding[1] == -3);
     situation.set(Predicate.FoodAheadLeftFar, surrounding[2] == -3);
@@ -83,19 +93,19 @@ class Ctrl_Sys extends IAcceptor{
   public IAction getRandomAction() {
     List<IAction> actions = new LinkedList<IAction>();
 
-    actions.add(turnLeftSmall);
-    actions.add(turnRightSmall);
+    actions.add(turnLeft);
+    actions.add(turnRight);
+    actions.add(stop);
 
-    if(sensor.ray_s_cond[1] != 1)
+
+    if(SurroundingScanner.ray_s_cond[1] != 1)
       actions.add(moveAhead);
-    if(sensor.ray_s_cond[7] != 1)
+    if(SurroundingScanner.ray_s_cond[7] != 1)
       actions.add(moveBack);
-    if(sensor.ray_s_cond[4] != 1){
-      actions.add(turnLeftBig);
-    }
-    if(sensor.ray_s_cond[10] != 1){
-      actions.add(turnRightBig);
-    }
+    // if(SurroundingScanner.ray_s_cond[4] != 1)
+    //   actions.add(turnLeftBig);
+    // if(SurroundingScanner.ray_s_cond[10] != 1)
+    //   actions.add(turnRightBig);
 
     IAction action = actions.get((int) (Math.random() * actions.size()));
 
@@ -107,9 +117,21 @@ class Ctrl_Sys extends IAcceptor{
     return proactivity;
   }
 
-  void main(String[] args){
+  public static void main(String[] args){
 
+    Ctrl_Sys CS = new Ctrl_Sys();
 
+    new EnvirCtrl();
+
+    for(;;){
+      try{
+      Thread.sleep(1000);
+      }
+      catch(InterruptedException ex){}
+
+      CS.primaryFS.reachGoal(CS);
+      EnvirCtrl.foodEaten = false;
+    }
 
   }
 }

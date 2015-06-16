@@ -4,8 +4,9 @@ import java.lang.Process;
 
 import java.lang.InterruptedException;
 
-public class FoodCtrl implements Runnable{
+public class EnvirCtrl implements Runnable{
 
+  Integer[] ray_s_cond;
   String[] arr;
   String s;
   Float x, y, xRnd, yRnd;
@@ -17,14 +18,14 @@ public class FoodCtrl implements Runnable{
   SurroundingScanner ObjectSensor;
   static boolean foodEaten = false;
 
-  FoodCtrl(SurroundingScanner ObjectSensor){
+  EnvirCtrl(){
     // pb = new ProcessBuilder("gz", "topic", "-e",
     //   "/gazebo/default/pose/info", "-u");
     // p = pb.start();
     // stdInput = new BufferedReader(new
     //   InputStreamReader(p.getInputStream()), 10000);
     pb = new ProcessBuilder("gz", "model", "-m", "eater", "-p");
-    this.ObjectSensor = ObjectSensor;
+    ObjectSensor = new SurroundingScanner();
     (new Thread(this)).start();
   }
 
@@ -70,13 +71,14 @@ public class FoodCtrl implements Runnable{
       catch(InterruptedException ex){}
 
 // if food is near
-        for (int item: ObjectSensor.sensorOut()){
-          if(item == -1){
-            foodEaten = true;
-            foodRespawn();
-            break;
-          }
+      ray_s_cond = ObjectSensor.sensorOut();
+      for (int item: ray_s_cond){
+        if(item == -1){
+          foodEaten = true;
+          foodRespawn();
+          break;
         }
+      }
 
     }
   }

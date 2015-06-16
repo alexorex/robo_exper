@@ -1,6 +1,7 @@
 public class Predicate{
   public static final int FoodEaten = 0;
 
+  public static final int IsMoving = 1;
   // public static final int IsMovingAhead = 1;
   // public static final int IsMovingBack = 2;
   // public static final int SmallDistanceCovered = 0;

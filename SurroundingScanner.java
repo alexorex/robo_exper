@@ -11,7 +11,7 @@ public class SurroundingScanner{
       Float[] ranges, ranges2;
       Float range_max;
       Integer ray_count;
-      Integer[] ray_s_cond;
+      volatile static Integer[] ray_s_cond;
       Process p, p2;
       ProcessBuilder pb, pb2;
       BufferedReader stdInput, stdInput2;
