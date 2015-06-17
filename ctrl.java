@@ -1,6 +1,7 @@
 import java.io.*;
 import java.io.IOException;
 import java.lang.InterruptedException;
+import ru.nsu.alife.fs.IAction;
 
 
 class ctrl{
@@ -27,7 +28,7 @@ class ctrl{
     // }
     // catch(InterruptedException ex){}
 
-    new EnvirCtrl();
+    // new EnvirCtrl();
     //
     //
     //   String s;
@@ -40,6 +41,41 @@ class ctrl{
     //       s = "gz model -m food" + " -x " + xRnd.toString() + " -y " + yRnd.toString() + " -z 2";
     //       System.out.println(s);
     //       p2 = java.lang.Runtime.getRuntime().exec(s);
+
+    IAction par;
+
+    Ctrl_Sys mvr = new Ctrl_Sys();
+
+    par = mvr.moveAhead;
+    par.doAction();
+    try{
+      Thread.sleep(5000);
+    }
+    catch(InterruptedException ex){}
+
+    par = mvr.moveBack;
+    par.doAction();
+    try{
+      Thread.sleep(5000);
+    }
+    catch(InterruptedException ex){}
+
+    par = mvr.turnLeft;
+    par.doAction();
+    try{
+      Thread.sleep(5000);
+    }
+    catch(InterruptedException ex){}
+
+    par = mvr.turnRight;
+    par.doAction();
+    try{
+      Thread.sleep(5000);
+    }
+    catch(InterruptedException ex){}
+
+    par = mvr.stop;
+    par.doAction();
 
   }
 }

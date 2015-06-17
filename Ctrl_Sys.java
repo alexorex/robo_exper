@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.io.IOException;
 
 import ru.nsu.alife.fs.FS;
 import ru.nsu.alife.fs.IAcceptor;
@@ -16,23 +17,23 @@ class Ctrl_Sys extends IAcceptor{
   PredicateSet goal;
   IFS primaryFS;
 
-  IAction moveAhead;
-  IAction moveBack;
-  IAction turnRight;
-  IAction turnLeft;
-  IAction stop;
+  // IAction moveAhead;
+  // IAction moveBack;
+  // IAction turnRight;
+  // IAction turnLeft;
+  // IAction stop;
   // IAction turnRightBig;
   // IAction turnLeftBig;
 
   Ctrl_Sys(){
     // sensor = new SurroundingScanner();
 
-    Mover mvr = new Mover();
-    moveAhead = mvr.moveBack;
-    moveBack = mvr.moveAhead;
-    turnRight = mvr.turnRight;
-    turnLeft = mvr.turnLeft;
-    stop = mvr.stop;
+    // Mover mvr = new Mover();
+    // moveAhead = mvr.moveBack;
+    // moveBack = mvr.moveAhead;
+    // turnRight = mvr.turnRight;
+    // turnLeft = mvr.turnLeft;
+    // stop = mvr.stop;
     // turnRightBig = mvr.turnRightBig;
     // turnLeftBig = mvr.turnLeftBig;
 
@@ -41,6 +42,134 @@ class Ctrl_Sys extends IAcceptor{
     primaryFS = (IFS) new FS(goal, 10);
   }
 
+  public final IAction stop = new IAction(){
+    @Override
+    public boolean doAction(){
+      try{
+        ProcessBuilder st_l = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "left_wheel_hinge", "-f", "0");
+        ProcessBuilder st_r = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "right_wheel_hinge", "-f", "0");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j left_wheel_hinge --vel-t 0");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j right_wheel_hinge --vel-t 0");
+        st_l.start();
+        st_r.start();
+
+      }
+      catch(IOException ex){}
+
+      Ctrl_Sys.animateInMotion = false;
+      return true;
+    }
+  };
+
+  public final IAction moveAhead = new IAction(){
+    @Override
+    public boolean doAction(){
+      try{
+        ProcessBuilder fw_l = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "left_wheel_hinge", "-f", "9");
+        ProcessBuilder fw_r = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "right_wheel_hinge", "-f", "9");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j left_wheel_hinge --vel-t 5");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j right_wheel_hinge --vel-t 5");
+        // ProcessBuilder pbl = new ProcessBuilder("gz", "joint", "-m",
+        //   "eater", "-j", "left_wheel_hinge", "--vel-t", "5");
+        // ProcessBuilder pbr = new ProcessBuilder("gz", "joint", "-m",
+        //     "eater", "-j", "right_wheel_hinge", "--vel-t", "5");
+        //
+        // pbl.start();
+        // pbr.start();
+        fw_l.start();
+        fw_r.start();
+      }
+      catch(IOException ex){}
+
+      Ctrl_Sys.animateInMotion = true;
+      return true;
+    }
+  };
+
+  public final IAction moveBack = new IAction(){
+    @Override
+    public boolean doAction(){
+      try{
+        ProcessBuilder bk_l = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "left_wheel_hinge", "-f", "-3");
+        ProcessBuilder bk_r = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "right_wheel_hinge", "-f", "-3");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j left_wheel_hinge --vel-t -3");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j right_wheel_hinge --vel-t -3");
+        // ProcessBuilder pbl = new ProcessBuilder("gz", "joint", "-m",
+        //   "eater", "-j", "left_wheel_hinge", "--vel-t", "-3");
+        // ProcessBuilder pbr = new ProcessBuilder("gz", "joint", "-m",
+        //   "eater", "-j", "right_wheel_hinge", "--vel-t", "-3");
+        //
+        // pbl.start();
+        // pbr.start();
+        bk_l.start();
+        bk_r.start();
+      }
+      catch(IOException ex){}
+
+      Ctrl_Sys.animateInMotion = true;
+      return true;
+    }
+  };
+
+  public final IAction turnRight = new IAction(){
+    @Override
+    public boolean doAction(){
+      try{
+        ProcessBuilder rt_l = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "left_wheel_hinge", "-f", "3");
+        ProcessBuilder rt_r = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "right_wheel_hinge", "-f", "-3");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j left_wheel_hinge --vel-t 3");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j right_wheel_hinge --vel-t -3");
+        rt_l.start();
+        rt_r.start();
+        }
+      catch(IOException ex){}
+      // catch(InterruptedException EX){}
+
+      Ctrl_Sys.animateInMotion = true;
+      return true;
+    }
+  };
+
+  public final IAction turnLeft = new IAction(){
+    @Override
+    public boolean doAction(){
+      try{
+        ProcessBuilder lf_l = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "left_wheel_hinge", "-f", "-3");
+        ProcessBuilder lf_r = new ProcessBuilder("gz", "joint", "-m",
+        "eater", "-j", "right_wheel_hinge", "-f", "3");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j left_wheel_hinge --vel-t -3");
+        // java.lang.Runtime.getRuntime().exec("gz joint -m " +
+        //   "eater -j right_wheel_hinge --vel-t 3");
+        lf_l.start();
+        lf_r.start();
+        }
+      catch(IOException ex){}
+      // catch(InterruptedException EX){}
+
+      Ctrl_Sys.animateInMotion = true;
+      return true;
+    }
+  };
+
+
   @Override
   public PredicateSet getCurrentSituation() {
     PredicateSet situation = new PredicateSet();
@@ -48,7 +177,7 @@ class Ctrl_Sys extends IAcceptor{
 
     situation.set(Predicate.FoodEaten, EnvirCtrl.foodEaten);
 
-    situation.set(Predicate.IsMoving, Ctrl_Sys.animateInMotion);
+    // situation.set(Predicate.IsMoving, Ctrl_Sys.animateInMotion);
 
     situation.set(Predicate.FoodAheadFar, surrounding[1] == -3);
     situation.set(Predicate.FoodAheadLeftFar, surrounding[2] == -3);
@@ -125,7 +254,7 @@ class Ctrl_Sys extends IAcceptor{
 
     for(;;){
       try{
-        Thread.sleep(1000);
+        Thread.sleep(5000);
       }
       catch(InterruptedException ex){}
 
