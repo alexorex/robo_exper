@@ -27,8 +27,8 @@ class ctrl{
     // }
     // catch(InterruptedException ex){}
 
-    new FoodCtrl(new sth());
-    // 
+    new EnvirCtrl();
+    //
     //
     //   String s;
     //   Float x, y, xRnd, yRnd;

@@ -25,7 +25,6 @@ public class EnvirCtrl implements Runnable{
     // stdInput = new BufferedReader(new
     //   InputStreamReader(p.getInputStream()), 10000);
     pb = new ProcessBuilder("gz", "model", "-m", "eater", "-p");
-    ObjectSensor = new SurroundingScanner();
     (new Thread(this)).start();
   }
 
@@ -64,14 +63,17 @@ public class EnvirCtrl implements Runnable{
   }
 
   public void run(){
+
+    ObjectSensor = new SurroundingScanner();
+
     for(;;){
       try{
-      Thread.sleep(1000);
+        Thread.sleep(1000);
       }
       catch(InterruptedException ex){}
 
-// if food is near
-      ray_s_cond = ObjectSensor.sensorOut();
+      ObjectSensor.readReq = true;
+      ray_s_cond = ObjectSensor.ray_s_cond;
       for (int item: ray_s_cond){
         if(item == -1){
           foodEaten = true;
