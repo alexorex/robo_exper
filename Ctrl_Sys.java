@@ -247,7 +247,10 @@ class Ctrl_Sys extends IAcceptor{
   }
 
   public static void main(String[] args){
-
+    
+    //speed up simulation x3
+    java.lang.Runtime.getRuntime().exec("gz physics -s 0.003");
+    
     Ctrl_Sys CS = new Ctrl_Sys();
 
     new EnvirCtrl();
